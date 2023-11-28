@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -23,42 +23,67 @@ namespace Kevin.Semprini._4i.Rubrica
     public partial class MainWindow : Window
     {
         public MainWindow()
-        {
+        {   
+            
             InitializeComponent();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-           
             
-            Contatto[] Contatti = new Contatto[100];
-            for (int i = 0; i < Contatti.Length; i++)
-            {
-                Contatti[i] = new Contatto();
-            }
-
-
+            int idx = 0;
             try
             {
+
+                const int MAX = 100;
+                Contatto[] Contatti = new Contatto[MAX];
                 StreamReader fin = new StreamReader("Dati.csv"); //legge i dati dal file "Dati.csv"
-                string riga;
-                int idx = 0;
-                while (!(fin.EndOfStream))
+                idx = 0;
+                while (!fin.EndOfStream)
                 {
-                    riga = fin.ReadLine();
-                    Contatto c = new Contatto(riga);
+                    if (idx < MAX)
+                    {
+                        string riga = fin.ReadLine();
+                        Contatto c = new Contatto(riga);
+                        Contatti[idx++] = c;
+                    }
+                    else
+                        break;
+
+
                     // l'indice "idx++" serve per far scrivere dentro il valore di idx per poi incrementarlo senza scrivere nel secondo valore
                     //si chiama "post-incremento"
-                    Contatti[idx++] = c;
-                }
 
-            } catch (Exception err) 
+                }
+                for (; idx < MAX; idx++)
+                {
+                    Contatto c = new Contatto();
+                    c.Numero = idx;
+                    Contatti[idx] = c;
+
+                }
+                dgDati.ItemsSource = Contatti;
+
+            }
+            catch (Exception err)
             {
-                MessageBox.Show("NUH HUH\n" + err.Message);
+                MessageBox.Show($" NUH UH\n + {err.Message} \n  alla riga {idx}");
             }
 
-            dgDati.ItemsSource = Contatti;
 
+
+        }
+        private void DgDati_LoadingRow(object sender, DataGridRowEventArgs e)
+        {
+            Contatto c = e.Row.Item as Contatto;
+            if (c != null)
+            {
+                if (c.Numero == 0)
+                {
+                    e.Row.Foreground = Brushes.White;
+                    e.Row.Background = Brushes.Red;
+                }
+            }
         }
     }
 }
