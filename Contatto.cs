@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,8 +8,9 @@ namespace Kevin.Semprini._4i.Rubrica
 {
     internal class Contatto
     {
-        private int _numero = 0;
-        private string _cognome = "";
+        private int _numero;
+        private string nome;
+        private string _cognome;
 
         public int Numero
         {
@@ -21,9 +22,13 @@ namespace Kevin.Semprini._4i.Rubrica
             set
             {
                 if (value < 0 || value > 100)
+                {
                     throw new ArgumentOutOfRangeException();
-
-                _numero = value;
+                }
+                else
+                {
+                    _numero = value;
+                }
             }
         }
 
@@ -44,29 +49,24 @@ namespace Kevin.Semprini._4i.Rubrica
             string[] campi = riga.Split(';');
             if (campi.Length >= 5)
             {
-                this.Nome = campi[0];
-                this.Cognome = campi[1];
-                this.Telefono = campi[2];
-                this.EMail = campi[3];
-                this.CAP = campi[4];
+                this.Nome = campi[1];
+                this.Cognome = campi[2];
+                this.Telefono = campi[3];
+                this.EMail = campi[4];
+                this.CAP = campi[5];
+
+                int PK = 0;
+                int.TryParse(campi[0], out PK);
+                this.Numero = PK;
+                this.Numero = 0;
+
+
+
+                //tryParse serve a convertire il valore dato come primo paramentro in un valore di tipo "int"
+                //in questoc caso, e metterlo nella variabile PK che è di tipo int, è sempre stringa > var
+                //in pratica lui controlla la stringa e prende  il valore richiesto dalla variabile messa
+
             }
-
-             
-            
-
-            if (this.Telefono == " ")
-            {
-                throw new ArgumentException();
-            }
-
-
-
-        }
-        public Contatto(int numero, string nome, string cognome)
-        {
-            Numero = numero;
-            Nome = nome;
-            Cognome = cognome;
         }
     }
 }
